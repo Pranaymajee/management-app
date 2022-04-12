@@ -19,14 +19,23 @@ const getData = async() =>
     console.log(response.data);
     return response.data;
   };
+
   
-export default function Table1(props){ // The prop here is the onSaveEvent in Btn.js
+export default function Table1(props){
+
 
   //Using an empty array and then using async function to show the data in the table.
   const [data, setData] = useState([]);
   useEffect(async() => {
     setData(await getData());
   },[]);
+
+
+  //Rendering the searched value in the Table
+  useEffect(() => {
+    setData(props.searchData);
+  },[props.searchData])
+
 
   // Creating Pagination using MUI Codebase.
   const [page, setPage] = useState(0);
@@ -38,13 +47,14 @@ export default function Table1(props){ // The prop here is the onSaveEvent in Bt
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-  // Creating a functionality where user can select the rows to be displayed per page.
-  const emptyRows=rowsPerPage-Math.min(rowsPerPage,data.length-page*rowsPerPage);
+  const emptyRows = rowsPerPage-Math.min(rowsPerPage,data.length - page*rowsPerPage);
+
 
   //Creating a function where if a checkbox is selected, it will pass the row number(Serial Number) to CheckedValue in Btn.js
   const handleCheckbox = (event) => {    
     props.onSaveEvent(event.target.value); // This is recieved by the onSaveEvent function in the Table1 component in Btn.js
   }
+
 
   return(
     <div>

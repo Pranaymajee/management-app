@@ -109,7 +109,42 @@ const Btn = () => {
         }
     }
 
+//------PREDICT------PREDICT------PREDICT------PREDICT------PREDICT------PREDICT------PREDICT------
+
+    const predictClick = () => {
+        fetch("http://127.0.0.1:5000/all").then((response)=>{
+            console.log(response.json());
+            return response.json();
+        })
+        .then((data)=>{
+            console.log(data);
+        })
+    }
+
 //------ADVANCE SEARCH------ADVANCE SEARCH------ADVANCE SEARCH------ADVANCE SEARCH------ADVANCE SEARCH------ADVANCE SEARCH------ADVANCE SEARCH------
+
+    const [docId, setDocId] = useState("");
+    const [invoiceId, setInvoiceId] = useState("");
+    const [custNum, setCustNum] = useState("");
+    const [businessYr, setBusinessYr] = useState("");
+
+    const handleDocId = (event) => setDocId(event.targer.value);
+    const handleInvoiceId = (event) => setInvoiceId(event.targer.value);
+    const handleCustNumber = (event) => setCustNum(event.targer.value);
+    const handleBusinessYr = (event) => setBusinessYr(event.targer.value);
+    
+    const handleAdvance = (event) => {
+        // fetch("http://localhost:8080/HRC_project/advance?"+"cust_number="+event.target.value).then((response)=>{
+        //     return response.json();
+        // })
+        // .then((data)=>{
+        //     setAdvanceData(data.invoice);
+        //     console.log(advanceData);
+        // })
+        // setOpenAdvance(false);
+    }
+
+//------ANALYTICS VIEW------ANALYTICS VIEW------ANALYTICS VIEW------ANALYTICS VIEW------ANALYTICS VIEW------ANALYTICS VIEW------ANALYTICS VIEW------
 
     const [analyticsCD1,setAnalyticsCD1] = useState("");
     const [analyticsCD2,setAnalyticsCD2] = useState("");
@@ -119,7 +154,7 @@ const Btn = () => {
     const [analyticsBSD2,setAnalyticsBSD2] = useState("");
     const [analyticsIC1,setAnalyticsIC1] = useState("");
     const [analyticsIC2,setAnalyticsIC2] = useState("");
-<Chart value1={analyticsCD1}/>
+{/* <Chart value1={analyticsCD1}/> */}
     const analyticsClearDate1 = (event) => setAnalyticsCD1(event.target.value);
     const analyticsClearDate2 = (event) => setAnalyticsCD2(event.target.value);
     const analyticsDueDate1 = (event) => setAnalyticsDD1(event.target.value);
@@ -135,14 +170,17 @@ const Btn = () => {
     }
 
 //------SEARCH------SEARCH------SEARCH------SEARCH------SEARCH------SEARCH------SEARCH------SEARCH------SEARCH------SEARCH------SEARCH------SEARCH------
-
-    // const [filterFn, setFilterFn] = useState("");
-    // const handleSearch = (event) => {
-    //     let target = event.target;
-    //     setFilterFn({
-    //         fn :
-    //     )};
-    // }
+    
+    const [searchData, setSearchData] = useState([]);
+    const handleSearch = (event) => {
+        fetch("http://localhost:8080/HRC_project/search?"+"cust_number="+event.target.value).then((response)=>{
+            return response.json();
+        })
+        .then((data)=>{
+            setSearchData(data.invoice);
+            console.log(searchData);
+        })
+    }
 
 //------ADD------ADD------ADD------ADD------ADD------ADD------ADD------ADD------ADD------ADD------ADD------ADD------
 
@@ -165,15 +203,13 @@ const Btn = () => {
         invoice_id: ''
     }
     const [invoice, setInvoice] = useState(initialValue);
-
     const onValueChange = (e) => {
         setInvoice({ ...invoice, [e.target.name]: e.target.value })
     }
-
     const handleAdd = async () => {
         await addInvoice(invoice);
         setOpenAdd(false);
-        // TODO: refreshPage();
+        refreshPage();
     }
 
 //------EDIT------EDIT------EDIT------EDIT------EDIT------EDIT------EDIT------EDIT------EDIT------EDIT------EDIT------EDIT------
@@ -208,8 +244,8 @@ const Btn = () => {
         refreshPage();
     }
 
+
     return ( 
-        
         <div>
 
             {/*--------------------------------------------------Buttons--------------------------------------------------*/}
@@ -218,19 +254,19 @@ const Btn = () => {
                 <Grid item xs={12} md={12} lg={4.5}>
                     <Box sx={{mx: 'auto', width: 1, pr: 3, pl: 3, pb: 3, pt: 3, m: 0, textAlign: 'center'}}>
                         <ButtonGroup fullWidth variant="contained" size="large" aria-label="large button group">
-                        <Button sx={{fontSize:'0.8rem'}}>PREDICT</Button>
+                        <Button onClick={predictClick} sx={{fontSize:'0.8rem'}}>PREDICT</Button>
                         <Button onClick={analyticsClick} sx={{fontSize:'0.8rem'}} variant="outlined">ANALYTICS VIEW</Button>
                         <Button onClick={advanceClick} sx={{fontSize:'0.8rem'}} variant="outlined">ADVANCE SEARCH</Button>
                         </ButtonGroup>
                     </Box>
                 </Grid>
                 <Grid item xs={12} md={12} lg={3} alignItems="center" justifyContent="center">
-                    <Box sx={{mx: 'auto', width: 1, pr: 5, pl: 5, pb: 3, pt: 3, m: 0, textAlign: 'center', display: 'flex'}}>
+                    <Box sx={{mx:'auto', width:1, pr:5, pl:5, pb:3, pt:3, m:0, textAlign:'center', display:'flex'}}>
                         <TextField
                         className={classes.searchbar}
                         fullWidth size="small"
                         id="outlined-basic"
-                        // onChange={handl
+                        onChange={handleSearch}
                         placeholder="Search Customer ID"
                         color="primary"
                         />
@@ -303,15 +339,15 @@ const Btn = () => {
                 <DialogTitle sx={{bgcolor: '#283D4A', color: "white"}}>ADVANCE SEARCH</DialogTitle>
                 <DialogContent sx={{bgcolor: '#283D4A'}}>
                     <Box className={classes.flex_dialog}>
-                        <TextField sx={{mt:2,mb:2}} className={classes.textField} id="doc_id" label="Document id" variant="filled" focused />
-                        <TextField sx={{mt:2,mb:2}} className={classes.textField} id="invoice_id" label="Invoice id" variant="filled" focused />
-                        <TextField sx={{mt:2,mb:2}} className={classes.textField} id="cust_number" label="Customer Number" variant="filled" focused />
-                        <TextField sx={{mt:2,mb:2}} className={classes.textField} id="buisness_year" label="Business Year" variant="filled" focused /> 
+                        <TextField onChange={handleDocId} sx={{mt:2,mb:2}} className={classes.textField} id="doc_id" label="Document id" variant="filled" focused />
+                        <TextField onChange={handleInvoiceId} sx={{mt:2,mb:2}} className={classes.textField} id="invoice_id" label="Invoice id" variant="filled" focused />
+                        <TextField onChange={handleCustNumber} sx={{mt:2,mb:2}} className={classes.textField} id="cust_number" label="Customer Number" variant="filled" focused />
+                        <TextField onChange={handleBusinessYr} sx={{mt:2,mb:2}} className={classes.textField} id="buisness_year" label="Business Year" variant="filled" focused /> 
                     </Box>
                 </DialogContent>
                 <DialogActions sx={{pb:3, bgcolor: '#283D4A'}}>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <Button fullWidth onClick={handleCloseAdvance} variant='contained'>Search</Button>
+                <Button fullWidth onClick={handleAdvance} variant='contained'>Search</Button>
                 &nbsp;&nbsp;&nbsp;
                 <Button fullWidth onClick={handleCloseAdvance} variant='contained'>Cancel</Button>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -350,7 +386,7 @@ const Btn = () => {
                 </DialogActions>
             </Dialog>
 
-            {/*--------------------------------------------------Dialog Boxxx for EDIT--------------------------------------------------*/}
+            {/*--------------------------------------------------Dialog Box for EDIT--------------------------------------------------*/}
 
             <Dialog maxWidth="md" open={openEdit} onClose={handleCloseEdit}>
                 <DialogTitle sx={{bgcolor: '#283D4A', color: "white"}}>EDIT</DialogTitle>
@@ -387,7 +423,7 @@ const Btn = () => {
                 </DialogActions>
             </Dialog>
 
-            <Table1 onSaveEvent={serialNo}/>
+            <Table1 searchData={searchData} onSaveEvent={serialNo}/>
         </div>
    )
 }
