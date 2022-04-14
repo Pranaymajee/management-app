@@ -13,7 +13,9 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Typography from '@mui/material/Typography';
 import { makeStyles } from '@mui/styles';
+import RefreshIcon from '@material-ui/icons/Refresh';
 import { addInvoice } from '../../ADD API AXIOS/addaxios';
+
 
 const useStyles = makeStyles({
     searchbar:{
@@ -43,6 +45,7 @@ const useStyles = makeStyles({
 
 
 const Btn = () => {
+
 
     const classes = useStyles();
 
@@ -81,6 +84,20 @@ const Btn = () => {
     const deleteClick = () => setOpenDelete(true);
     const handleCloseDelete = () => setOpenDelete(false);
 
+    //storing row.doc_id in docIdVal which is coming from Table1.js
+    const [checkAge, setCheckAge] = useState([]);
+    const rowDoc = (docIdVal) => {
+        var docId = parseInt(docIdVal)
+        if(checkAge.includes(docId)){
+            const index = checkAge.indexOf(docId);
+            checkAge.splice(index, 1);
+        }
+        else{
+            checkAge.push(docId);
+        }
+        console.log(checkAge);
+    }
+
     //storing row number(Serial Number) in CheckedValue which is coming from Table1.js
     const[checkedValue,setCheckedValue]=React.useState([]);
     const serialNo = (CheckedValue) => {
@@ -109,19 +126,26 @@ const Btn = () => {
         }
     }
 
-//------PREDICT------PREDICT------PREDICT------PREDICT------PREDICT------PREDICT------PREDICT------
 
-    const predictClick = () => {
-        fetch("http://127.0.0.1:5000/all").then((response)=>{
-            console.log(response.json());
+//------PREDICT------PREDICT------PREDICT------PREDICT------PREDICT------PREDICT------PREDICT------PREDICT------
+
+
+    const predictClick = (checkAge) => {
+        fetch("http://localhost:5000/get_prediction",{method:'POST',headers:{'Content-Type': 'application/json',},
+        body:JSON.stringify({data:checkAge})}).then((response)=>
+        {
             return response.json();
         })
-        .then((data)=>{
+        .then((data)=>
+        {
             console.log(data);
+            // fetch("http://localhost:8080/HRC_PROJECT/PREDICT?"+"bucket="+data[0]["aging_bucket"]+"&doc_id="+data[0]["doc_id"])
         })
     }
 
-//------ADVANCE SEARCH------ADVANCE SEARCH------ADVANCE SEARCH------ADVANCE SEARCH------ADVANCE SEARCH------ADVANCE SEARCH------ADVANCE SEARCH------
+
+//------ADVANCE SEARCH------ADVANCE SEARCH------ADVANCE SEARCH------ADVANCE SEARCH------ADVANCE SEARCH------ADVANCE SEARCH------
+
 
     const [docId, setDocId] = useState("");
     const [invoiceId, setInvoiceId] = useState("");
@@ -144,7 +168,9 @@ const Btn = () => {
         // setOpenAdvance(false);
     }
 
-//------ANALYTICS VIEW------ANALYTICS VIEW------ANALYTICS VIEW------ANALYTICS VIEW------ANALYTICS VIEW------ANALYTICS VIEW------ANALYTICS VIEW------
+
+//------ANALYTICS VIEW------ANALYTICS VIEW------ANALYTICS VIEW------ANALYTICS VIEW------ANALYTICS VIEW------ANALYTICS VIEW------
+
 
     const [analyticsCD1,setAnalyticsCD1] = useState("");
     const [analyticsCD2,setAnalyticsCD2] = useState("");
@@ -154,7 +180,7 @@ const Btn = () => {
     const [analyticsBSD2,setAnalyticsBSD2] = useState("");
     const [analyticsIC1,setAnalyticsIC1] = useState("");
     const [analyticsIC2,setAnalyticsIC2] = useState("");
-{/* <Chart value1={analyticsCD1}/> */}
+
     const analyticsClearDate1 = (event) => setAnalyticsCD1(event.target.value);
     const analyticsClearDate2 = (event) => setAnalyticsCD2(event.target.value);
     const analyticsDueDate1 = (event) => setAnalyticsDD1(event.target.value);
@@ -169,8 +195,10 @@ const Btn = () => {
         setOpenAnalytics(false);
     }
 
-//------SEARCH------SEARCH------SEARCH------SEARCH------SEARCH------SEARCH------SEARCH------SEARCH------SEARCH------SEARCH------SEARCH------SEARCH------
+
+//------SEARCH------SEARCH------SEARCH------SEARCH------SEARCH------SEARCH------SEARCH------SEARCH------SEARCH------SEARCH------
     
+
     const [searchData, setSearchData] = useState([]);
     const handleSearch = (event) => {
         fetch("http://localhost:8080/HRC_project/search?"+"cust_number="+event.target.value).then((response)=>{
@@ -182,7 +210,9 @@ const Btn = () => {
         })
     }
 
+
 //------ADD------ADD------ADD------ADD------ADD------ADD------ADD------ADD------ADD------ADD------ADD------ADD------
+
 
     // Setting the values given by the user using useState.
     const initialValue = {
@@ -212,7 +242,9 @@ const Btn = () => {
         refreshPage();
     }
 
+
 //------EDIT------EDIT------EDIT------EDIT------EDIT------EDIT------EDIT------EDIT------EDIT------EDIT------EDIT------EDIT------
+
 
     // Setting the value given by the user in currency and custPayment using useState.
     const [currency, setcurrency] = React.useState("");
@@ -230,7 +262,9 @@ const Btn = () => {
         refreshPage();
     }
 
+
 //------DELETE------DELETE------DELETE------DELETE------DELETE------DELETE------DELETE------DELETE------DELETE------DELETE------DELETE------DELETE------
+
 
     // Passing the serial number as parameters to the backend via axois.get
     const handleDelete = () => {
@@ -250,17 +284,19 @@ const Btn = () => {
 
             {/*--------------------------------------------------Buttons--------------------------------------------------*/}
 
+
             <Grid container sx={{bgcolor: '#283D4A'}} alignItems="center" justifyContent="center">
-                <Grid item xs={12} md={12} lg={4.5}>
-                    <Box sx={{mx: 'auto', width: 1, pr: 3, pl: 3, pb: 3, pt: 3, m: 0, textAlign: 'center'}}>
+                <Grid item xs={12} md={12} lg={5}>
+                    <Box sx={{mx: 'auto', width: 1, pr: 3, pl: 3, pb: 3, pt: 3, m: 0, textAlign: 'center',display: 'flex', flexDirection: 'row'}}>
                         <ButtonGroup fullWidth variant="contained" size="large" aria-label="large button group">
                         <Button onClick={predictClick} sx={{fontSize:'0.8rem'}}>PREDICT</Button>
                         <Button onClick={analyticsClick} sx={{fontSize:'0.8rem'}} variant="outlined">ANALYTICS VIEW</Button>
                         <Button onClick={advanceClick} sx={{fontSize:'0.8rem'}} variant="outlined">ADVANCE SEARCH</Button>
                         </ButtonGroup>
+                        <Button onClick={refreshPage} sx={{fontSize:'0.8rem'}} variant="outlined"><RefreshIcon/></Button>
                     </Box>
                 </Grid>
-                <Grid item xs={12} md={12} lg={3} alignItems="center" justifyContent="center">
+                <Grid item xs={12} md={12} lg={2.5} alignItems="center" justifyContent="center">
                     <Box sx={{mx:'auto', width:1, pr:5, pl:5, pb:3, pt:3, m:0, textAlign:'center', display:'flex'}}>
                         <TextField
                         className={classes.searchbar}
@@ -283,7 +319,9 @@ const Btn = () => {
                 </Grid>
             </Grid>
 
+
             {/*--------------------------------------------------Dialog Box for ANALYTICS VIEW--------------------------------------------------*/}
+
 
             <Dialog open={openAnalytics} onClose={handleCloseAnalytics}>
                 <DialogTitle sx={{bgcolor: '#283D4A', color: "white"}}>ANALYTICS VIEW</DialogTitle>
@@ -320,12 +358,14 @@ const Btn = () => {
                 </DialogActions>
             </Dialog>
 
+
             {/*--------------------------------------------------Dialog Box for CHART--------------------------------------------------*/}
+
 
             <Dialog fullScreen open={openChart} onClose={handleCloseChart}>
                 <DialogTitle sx={{bgcolor: '#283D4A', color: 'white'}}>ANALYTICS VIEW</DialogTitle>
                 <DialogContent sx={{bgcolor: '#283D4A'}}>
-                
+                    {/* <Chart value1={analyticsCD1}/> */}
                 </DialogContent>
                 <DialogActions sx={{pb:3, bgcolor: '#283D4A'}}>
                 <Button onClick={handleCloseChart} variant='contained'>Cancel</Button>
@@ -333,7 +373,9 @@ const Btn = () => {
                 </DialogActions>
             </Dialog>
 
+
             {/*--------------------------------------------------Dialog Box for ADVANCE SEARCH--------------------------------------------------*/}
+
 
             <Dialog open={openAdvance} onClose={handleCloseAdvance}>
                 <DialogTitle sx={{bgcolor: '#283D4A', color: "white"}}>ADVANCE SEARCH</DialogTitle>
@@ -354,7 +396,9 @@ const Btn = () => {
                 </DialogActions>
             </Dialog>
 
+
             {/*--------------------------------------------------Dialog Box for ADD--------------------------------------------------*/}
+
 
             <Dialog maxWidth="md" open={openAdd} onClose={handleCloseAdd}>
                 <DialogTitle sx={{bgcolor: '#283D4A', color: "white"}}>ADD</DialogTitle>
@@ -386,7 +430,9 @@ const Btn = () => {
                 </DialogActions>
             </Dialog>
 
+
             {/*--------------------------------------------------Dialog Box for EDIT--------------------------------------------------*/}
+
 
             <Dialog maxWidth="md" open={openEdit} onClose={handleCloseEdit}>
                 <DialogTitle sx={{bgcolor: '#283D4A', color: "white"}}>EDIT</DialogTitle>
@@ -405,7 +451,9 @@ const Btn = () => {
                 </DialogActions>
             </Dialog>
 
+
             {/*--------------------------------------------------Dialog Box for DELETE--------------------------------------------------*/}
+
 
             <Dialog open={openDelete} onClose={handleCloseDelete}>
                 <DialogTitle sx={{bgcolor: '#283D4A', color: 'white'}}>DELETE RECORDS?</DialogTitle>
@@ -423,7 +471,7 @@ const Btn = () => {
                 </DialogActions>
             </Dialog>
 
-            <Table1 searchData={searchData} onSaveEvent={serialNo}/>
+            <Table1 searchData={searchData} onSaveEvent={serialNo} onSaveDoc={rowDoc} />
         </div>
    )
 }

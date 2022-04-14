@@ -1,7 +1,6 @@
 import axios from 'axios';
-const url = 'http://localhost:8080/HRC_project'; //the backend root url
 
-//adding data to the table api
+//adding data to the table
 export const addInvoice = async (invoice) => {
-    return await axios.post(`${url}/add`, invoice, {withCredentials: false, credentials: 'include'});
+    return await axios.post("http://localhost:8080/HRC_project/add", invoice, {withCredentials: false, credentials: 'include'});
 }

@@ -50,11 +50,12 @@ export default function Table1(props){
   const emptyRows = rowsPerPage-Math.min(rowsPerPage,data.length - page*rowsPerPage);
 
 
-  //Creating a function where if a checkbox is selected, it will pass the row number(Serial Number) to CheckedValue in Btn.js
+  //Creating a function where if a checkbox is selected, it will pass the row number(Serial Number) to CheckedValue in Body.js
   const handleCheckbox = (event) => {    
-    props.onSaveEvent(event.target.value); // This is recieved by the onSaveEvent function in the Table1 component in Btn.js
+    props.onSaveEvent(event.target.value); // This is recieved by the onSaveEvent function in the Table1 component in Body.js
+    props.onSaveDoc(event.target.id); // This is recieved by the onSaveDoc function in the Table1 component in Body.js
   }
-
+  
 
   return(
     <div>
@@ -84,7 +85,7 @@ export default function Table1(props){
               <TableBody>
                   {(rowsPerPage > 0 ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : data).map((row) =>
                     <TableRow>
-                      <TableCell><Checkbox name="Selected_row" id={row.sl_no} value={row.sl_no} onChange={handleCheckbox} style={{color:"white"}}/></TableCell>
+                      <TableCell><Checkbox name="Selected_row" id={row.doc_id} value={row.sl_no} onChange={handleCheckbox} style={{color:"white"}}/></TableCell>
                       <TableCell component="th" scope="row" style={{color:"white"}}>{row.sl_no}</TableCell>
                       <TableCell align="left" style={{color:"white"}}>{row.business_code}</TableCell>
                       <TableCell align="left" style={{color:"white"}}>{row.cust_number}</TableCell>
