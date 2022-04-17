@@ -11,19 +11,17 @@ import Paper from '@mui/material/Paper';
 import TablePagination from '@mui/material/TablePagination';
 import Checkbox from '@mui/material/Checkbox';
 
+  
+export default function Table1(props){
 
-//Getting the data from winter_internship using axios.  
-const getData = async() =>
+
+  //Getting the data from winter_internship using axios.  
+  const getData = async() =>
   {
     let response = await axios.get("http://localhost:8080/HRC_project/read");
     console.log(response.data);
     return response.data;
   };
-
-  
-export default function Table1(props){
-
-
   //Using an empty array and then using async function to show the data in the table.
   const [data, setData] = useState([]);
   useEffect(async() => {
@@ -55,7 +53,7 @@ export default function Table1(props){
     props.onSaveEvent(event.target.value); // This is recieved by the onSaveEvent function in the Table1 component in Body.js
     props.onSaveDoc(event.target.id); // This is recieved by the onSaveDoc function in the Table1 component in Body.js
   }
-  
+
 
   return(
     <div>
@@ -80,12 +78,13 @@ export default function Table1(props){
                       <TableCell align="left" style={{minWidth:"170px", color:"white", border:"1px solid white"}}>Baseline Create Date</TableCell>
                       <TableCell align="left" style={{minWidth:"200px", color:"white", border:"1px solid white"}}>Customer Payment Terms</TableCell>
                       <TableCell align="left" style={{minWidth:"150px", color:"white", border:"1px solid white"}}>Invoice ID</TableCell>
+                      <TableCell align="left" style={{minWidth:"150px", color:"white", border:"1px solid white"}}>Aging Bucket</TableCell>
                   </TableRow>
               </TableHead>
               <TableBody>
                   {(rowsPerPage > 0 ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : data).map((row) =>
                     <TableRow>
-                      <TableCell><Checkbox name="Selected_row" id={row.doc_id} value={row.sl_no} onChange={handleCheckbox} style={{color:"white"}}/></TableCell>
+                      <TableCell><Checkbox name="Selected_row" id={row.doc_id} value={row.sl_no} onClick={handleCheckbox} style={{color:"white"}}/></TableCell>
                       <TableCell component="th" scope="row" style={{color:"white"}}>{row.sl_no}</TableCell>
                       <TableCell align="left" style={{color:"white"}}>{row.business_code}</TableCell>
                       <TableCell align="left" style={{color:"white"}}>{row.cust_number}</TableCell>
@@ -102,6 +101,8 @@ export default function Table1(props){
                       <TableCell align="left" style={{color:"white"}}>{row.baseline_create_date}</TableCell>
                       <TableCell align="left" style={{color:"white"}}>{row.cust_payment_terms}</TableCell>
                       <TableCell align="left" style={{color:"white"}}>{row.invoice_id}</TableCell>
+                      <TableCell align="left" style={{color:"white"}}>{row.aging_bucket}</TableCell>
+
                     </TableRow>
                   )}
                   {emptyRows>0&&(

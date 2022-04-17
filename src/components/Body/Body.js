@@ -14,7 +14,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Typography from '@mui/material/Typography';
 import { makeStyles } from '@mui/styles';
 import RefreshIcon from '@material-ui/icons/Refresh';
-import { addInvoice } from '../../ADD API AXIOS/addaxios';
+import { addInvoice } from '../Add API Axios/addaxios';
 
 
 const useStyles = makeStyles({
@@ -44,7 +44,7 @@ const useStyles = makeStyles({
 });
 
 
-const Btn = () => {
+const Body = () => {
 
 
     const classes = useStyles();
@@ -129,8 +129,9 @@ const Btn = () => {
 
 //------PREDICT------PREDICT------PREDICT------PREDICT------PREDICT------PREDICT------PREDICT------PREDICT------
 
-
-    const predictClick = (checkAge) => {
+    //converting to JSON
+    const predictClick = () => {
+        console.log(checkAge);
         fetch("http://localhost:5000/get_prediction",{method:'POST',headers:{'Content-Type': 'application/json',},
         body:JSON.stringify({data:checkAge})}).then((response)=>
         {
@@ -139,8 +140,9 @@ const Btn = () => {
         .then((data)=>
         {
             console.log(data);
-            // fetch("http://localhost:8080/HRC_PROJECT/PREDICT?"+"bucket="+data[0]["aging_bucket"]+"&doc_id="+data[0]["doc_id"])
+            fetch("http://localhost:8080/HRC_project/predict?"+"bucket="+data[0]["aging_bucket"]+"&doc_id="+data[0]["doc_id"]);
         })
+        // refreshPage();
     }
 
 
@@ -214,7 +216,7 @@ const Btn = () => {
 //------ADD------ADD------ADD------ADD------ADD------ADD------ADD------ADD------ADD------ADD------ADD------ADD------
 
 
-    // Setting the values given by the user using useState.
+    // Setting the values given by the user using useState and name attribute.
     const initialValue = {
         business_code: '',
         cust_number: '',
@@ -471,9 +473,11 @@ const Btn = () => {
                 </DialogActions>
             </Dialog>
 
+            {/* Table component */}
             <Table1 searchData={searchData} onSaveEvent={serialNo} onSaveDoc={rowDoc} />
+            
         </div>
    )
 }
 
-export default Btn
+export default Body
